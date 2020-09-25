@@ -17,7 +17,8 @@ namespace BooksBackend.Profiles
             CreateMap<Book, GetBookDetailsResponse>();
             CreateMap<BookCreateRequest, Book>()
                 .ForMember(dest => dest.IsInInventory, opt => opt.MapFrom((x) => true))
-                .ForMember(dest => dest.DateAdded, opt => opt.MapFrom((x) => DateTime.Now));
+                .ForMember(dest => dest.DateAdded, opt => opt.MapFrom((x) => DateTime.Now))
+                .ForMember(dest => dest.MarkedForSale, opt => opt.MapFrom((x) => false));
         }
     }
 }

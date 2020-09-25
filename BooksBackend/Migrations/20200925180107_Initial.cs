@@ -17,7 +17,8 @@ namespace BooksBackend.Migrations
                     Author = table.Column<string>(nullable: true),
                     NumberOfPages = table.Column<int>(nullable: false),
                     DateAdded = table.Column<DateTime>(nullable: false),
-                    IsInInventory = table.Column<bool>(nullable: false)
+                    IsInInventory = table.Column<bool>(nullable: false),
+                    MarkedForSale = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
