@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BooksBackend.Controllers
@@ -24,6 +25,34 @@ namespace BooksBackend.Controllers
             _context = context;
             _mapper = mapper;
             _mapperConfig = mapperConfig;
+        }
+
+        [HttpPut("/books/{bookId:int}/title")]
+        public async Task<ActionResult> UpdateTitle(int bookId, [FromBody] string newTitle)
+        {
+            var book = await _context.Books.Where(b => b.Id == bookId && b.IsInInventory).SingleOrDefaultAsync();
+            if (book == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                book.Title = newTitle;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+        }
+        [HttpDelete("/books/{bookId:int}")]
+        public async Task<ActionResult> RemoveABook(int bookId)
+        {
+            var bookToRemove = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId && b.IsInInventory);
+            if(bookToRemove != null)
+            {
+                bookToRemove.IsInInventory = false;
+                await _context.SaveChangesAsync();
+            }
+
+            return NoContent();
         }
 
         [HttpGet("/books")]
@@ -77,7 +106,7 @@ namespace BooksBackend.Controllers
                 .Where(b => b.Id == bookId && b.IsInInventory)
                 .ProjectTo<GetBookDetailsResponse>(_mapperConfig)
                 .SingleOrDefaultAsync();
-
+            Thread.Sleep(4000);
             if (book == null)
             {
                 return NotFound();
